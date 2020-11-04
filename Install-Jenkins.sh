@@ -36,7 +36,7 @@ echo "PLUGINS INSTALL DONE" >> /tmp/status.txt
 key=`sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
 
 #Adding new user and password
-echo 'jenkins.model.Jenkins.instance.securityRealm.createAccount("admin", "PY1h0nFl@sK")' | java -jar /var/cache/jenkins/war/WEB-INF/lib/cli-2.249.2.jar -auth admin:$key -s http://localhost:8080/ groovy =
+echo 'jenkins.model.Jenkins.instance.securityRealm.createAccount("admin", "MyStr0nGp@@sw0rD")' | java -jar /var/cache/jenkins/war/WEB-INF/lib/cli-2.249.2.jar -auth admin:$key -s http://localhost:8080/ groovy =
 
 # restart jenkins
 /etc/init.d/jenkins restart  >> /tmp/status.txt
