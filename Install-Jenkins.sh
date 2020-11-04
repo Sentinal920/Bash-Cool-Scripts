@@ -42,3 +42,4 @@ echo 'jenkins.model.Jenkins.instance.securityRealm.createAccount("admin", "MyStr
 /etc/init.d/jenkins restart  >> /tmp/status.txt
 echo "ALL DONE" >> /tmp/status.txt
 
+# All done! Fireup your browser and visit localhost:8080
