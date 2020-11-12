@@ -29,3 +29,5 @@ sudo systemctl start calc
 # Check Status of service
 sudo systemctl status calc
 
+# Add automatic start on boot:
+sudo systemctl enable calc
