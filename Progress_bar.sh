@@ -1,4 +1,4 @@
-# Adding Progress bar in a script
+# Adding a Simple Progress bar in a script
 
 # Some Task Here
 echo -ne '...                     (33%)\r'
