@@ -1,2 +1,2 @@
 # Bash-Cool-Scripts
-Personal Bash scripts collection to copy-paste while doing automation
+Personal Bash scripts collection to copy-paste (^_^) while doing automation
