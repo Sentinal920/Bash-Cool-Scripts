@@ -1,45 +1,40 @@
 echo "[+] Installing Jenkins at port 8080"
 
-#Installing Jenkins on port 8080
-
-echo "START" >> /tmp/status.txt
-sudo chmod 777 /tmp/status.txt
 apt update -y
 sudo apt install openjdk-11-jdk -y
 wget -qO - https://pkg.jenkins.io/debian-stable/jenkins.io.key | apt-key add -
 sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+
 sudo apt update -y
 sudo apt install jenkins -y
-echo "CONFIG DONE" >> /tmp/status.txt 
-sudo apt-get update -y >> /tmp/status.txt
-echo "APT-GET INSTALL DONE" >> /tmp/status.txt
+sudo apt-get update -y 
 
-# will wait for jenkins start up
 response=""
 key=""
+JenkinsCli=`echo /var/cache/jenkins/war/WEB-INF/lib/cli-*`
+
+# Checking if Jenkins is up or not by sending who-am-i
 while [ `echo $response | grep 'Authenticated' | wc -l` = 0 ]; do
+  sudo echo "Starting Jenkins..."
+  sleep 20
   key=`sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
-  echo $key >> /tmp/status.txt
-  response=`sudo java -jar /var/cache/jenkins/war/WEB-INF/lib/cli-2.249.2.jar -auth admin:$key -s http://localhost:8080  who-am-i`
-  sudo echo $response
-  sudo echo "Jenkins not started, wait for 2s"
-  sleep 2
-done >> /tmp/status.txt
-echo "Jenkins started" >> /tmp/status.txt
-echo "Install Plugins" >> /tmp/status.txt
+  echo $key 
+  response=`sudo java -jar $JenkinsCli -auth admin:$key -s http://localhost:8080  who-am-i`
+done
 
-# install plugins with jenkins-cli
-for package in ant blueocean blueocean-autofavorite build-timeout email-ext ghprb gradle jacoco workflow-aggregator pipeline-github-lib sbt ssh-slaves subversion timestamper ws-cleanup; do sudo sh -c "sudo java -jar /var/cache/jenkins/war/WEB-INF/lib/cli-2.249.2.jar -auth admin:$key -s http://localhost:8080 install-plugin $package  >> /tmp/status.txt"; done;  
-echo "PLUGINS INSTALL DONE" >> /tmp/status.txt
+echo "Jenkins started"
 
-#Display Initial Password
+# Installiong Some Suggested Plugins, It can also be configured via GUI using browser
+echo "Installing Plugins" 
+for package in ant blueocean blueocean-autofavorite build-timeout email-ext ghprb gradle jacoco workflow-aggregator pipeline-github-lib sbt ssh-slaves subversion timestamper ws-cleanup; do sudo sh -c "sudo java -jar $JenkinsCli -auth admin:$key -s http://localhost:8080 install-plugin $package";done;  
+
+# Adding a new admin user
 key=`sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
+echo "Adding Username:Password"
+echo 'jenkins.model.Jenkins.instance.securityRealm.createAccount("admin", "password")' | java -jar $JenkinsCli -auth admin:$key -s http://localhost:8080/ groovy =
+echo "Restart jenkins"
+/etc/init.d/jenkins restart  
 
-#Adding new user and password
-echo 'jenkins.model.Jenkins.instance.securityRealm.createAccount("admin", "MyStr0nGp@@sw0rD")' | java -jar /var/cache/jenkins/war/WEB-INF/lib/cli-2.249.2.jar -auth admin:$key -s http://localhost:8080/ groovy =
+echo "ALL DONE" 
 
-# restart jenkins
-/etc/init.d/jenkins restart  >> /tmp/status.txt
-echo "ALL DONE" >> /tmp/status.txt
-
-# All done! Fireup your browser and visit localhost:8080
+# All done! Fireup your browser, visit localhost:8080 and login with your new admin user
