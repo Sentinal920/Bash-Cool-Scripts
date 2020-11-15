@@ -24,7 +24,12 @@ done
 
 echo "Jenkins started"
 
-# Installiong Some Suggested Plugins, It can also be configured via GUI using browser
+# If you want to disable startup wizard and suggested plugins wizard uncomment below code and comment Installing Plugins code
+#echo "Disabling Setup and Plugin Wizard..."
+#sudo sed -i 's#<installStateName>NEW.*#<installStateName>RUNNING<\/installStateName>#g' /var/lib/jenkins/config.xml
+#sleep 5
+
+# Installiong Some Suggested Plugins
 echo "Installing Plugins" 
 for package in ant blueocean blueocean-autofavorite build-timeout email-ext ghprb gradle jacoco workflow-aggregator pipeline-github-lib sbt ssh-slaves subversion timestamper ws-cleanup; do sudo sh -c "sudo java -jar $JenkinsCli -auth admin:$key -s http://localhost:8080 install-plugin $package";done;  
 
