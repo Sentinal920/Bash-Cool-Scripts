@@ -15,6 +15,5 @@ echo 'Added Firewall Rule to only allow port 22 and 80'
 
 # ALLOW OUTBOUND RULES
 
-# sudo ufw allow out to <ip_adress> port <number of port>
 # sudo ufw allow out to 192.168.x.x port 22
 # sudo ufw reload
